@@ -23,6 +23,15 @@
   require("commit-buf.nvim").setup()
   ```
 
+## Test
+
+Use [`tests/minimal_init.lua`](tests/minimal_init.lua) to check.
+
+```bash
+nvim --headless --noplugin -u tests/minimal_init.lua -c \
+  "PlenaryBustedDirectory tests {minimal_init = 'tests/minimal_init.lua'}"
+```
+
 ## Before commit
 
 Use `pre-commit`. Follow the [official Quick start][1].
