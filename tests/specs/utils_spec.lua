@@ -1,6 +1,6 @@
 local utils = require("commit-buf.utils")
 describe("run_system_cmd()", function()
-  it("stdio outpu should be achieved", function()
+  it("stdio output should be achieved", function()
     local cmd = { "echo", "hello" }
     local stdout_table, _ = utils.run_system_cmd(cmd, 0, 0, 100)
     local expected_table = { "hello" }
