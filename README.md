@@ -1,5 +1,32 @@
 # commit-buf.nvim
 
+Attach supporting window when editing commit message within `git commit`.
+
+This plugin is inspired by [rhysd/commitia.vim](https://github.com/rhysd/committia.vim).
+
+## Installation
+
+* `lazy.nvim`
+
+  ```lua
+  local plugins = {
+    {"asana17/commit-buf.nvim"},
+  }
+
+  require("commit-buf.nvim").setup()
+  ```
+
+  Or you can use the local one. If you use the following command, make sure
+  this repo is installed under `~/`.
+
+  ```lua
+  local plugins = {
+    {"commit-buf.nvim", dir = "~/commit-buf.nvim"},
+  }
+
+  require("commit-buf.nvim").setup()
+  ```
+
 ## Before commit
 
 Use `pre-commit`. Follow the [official Quick start][1].
