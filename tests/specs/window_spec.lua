@@ -1,12 +1,12 @@
+local utils = require("commit-buf.utils")
 local window = require("commit-buf.window")
+local key = "default"
+
 describe("open()", function()
-  it("window number increases", function()
-    local initial_win_num = #vim.api.nvim_list_wins()
-
-    window.open()
-
-    local after_win_num = #vim.api.nvim_list_wins()
+  it("buffer name specified correctly", function()
+    window.open(key)
+    local buffer_name = vim.api.nvim_buf_get_name(0)
     vim.cmd("close")
-    assert.are.equal(initial_win_num + 1, after_win_num)
+    assert.are.equal(buffer_name, utils.prefix_path(key))
   end)
 end)

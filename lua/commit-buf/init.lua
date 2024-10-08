@@ -12,7 +12,7 @@ function M.set_autocmd()
     {
       group = M.augroup,
       pattern = '*.comtxt',
-      callback = window.open,
+      callback = window.setup,
     })
 end
 
