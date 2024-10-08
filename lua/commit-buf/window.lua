@@ -1,3 +1,4 @@
+local buffer = require("commit-buf.buffer")
 local M = {}
 
 local window_cmds = {
@@ -13,6 +14,7 @@ local window_cmds = {
 function M.open(key)
   local window_cmd = window_cmds[key]
   vim.cmd(window_cmd.. " " .. key)
+  vim.cmd.setlocal(buffer.setlocal_opt_fixed_readonly)
 end
 
 ---@return nil
