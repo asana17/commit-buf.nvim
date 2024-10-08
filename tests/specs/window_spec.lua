@@ -3,7 +3,7 @@ describe("open()", function()
   it("window number increases", function()
     local initial_win_num = #vim.api.nvim_list_wins()
 
-    window.open()
+    window.open("git_status")
 
     local after_win_num = #vim.api.nvim_list_wins()
     vim.cmd("close")

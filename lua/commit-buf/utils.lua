@@ -1,5 +1,7 @@
 local M = {}
 
+M.plugin_name = "commit-buf"
+
 ---@param result_table table
 ---@return nil
 local function remove_whiteline(result_table)
