@@ -1,4 +1,5 @@
 local buffer = require("commit-buf.buffer")
+local git = require("commit-buf.git")
 local M = {}
 
 local window_cmds = {
@@ -19,7 +20,7 @@ end
 
 ---@return nil
 function M.setup()
-  M.open("default")
+  git.open_windows()
 end
 
 return M
