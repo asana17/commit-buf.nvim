@@ -2,20 +2,32 @@ local log = require("commit-buf.log")
 
 local M = {}
 
----@type table<string, any>
-local configs_default = {
-    split = "right",
+---@type table<git_key, "commit_buf">
+local base_window = {
+  git_log = "commit_buf",
+}
+
+---@type table<git_key, table>
+local configs = {
+  git_log = {
+    split = "below",
+  },
 }
 
 ---@alias win_handle integer
----@type win_handle|nil could be nil, but should not be zero
-local g_handle
-
----@type win_handle|nil could be nil, but should not be zero
-local handle_base
+---@type table<git_key|"commit_buf", win_handle|nil>
+---these handles could be nil, but should not be zero
+local handles = {}
 
 ---@type boolean
 local initialized = false
+
+---@type table<git_key, table>
+local local_opts = {
+  git_log = {
+    number = false,
+  },
+}
 
 ---@alias vim_win_opt string
 ---@type table<vim_win_opt, any>
@@ -24,48 +36,57 @@ local local_opts_default = {
   foldenable = false,
 }
 
+---@param key git_key
 ---@return nil
-local function update_config()
-  configs_default["win"] = handle_base
+local function update_config(key)
+  configs[key]["win"] = handles[base_window[key]]
 end
 
----open window using config
+---open customized window by key
+---@param key git_key
 ---@return nil
-function M.open()
+function M.open(key)
   if not initialized then
     initialized = true
-    handle_base = vim.api.nvim_get_current_win()
+    handles["commit_buf"] = vim.api.nvim_get_current_win()
   end
 
-  update_config()
+  update_config(key)
 
-  local handle = vim.api.nvim_open_win(0, true, configs_default)
+  local handle = vim.api.nvim_open_win(0, true, configs[key])
   if handle == 0 then
-    log.debug("open(): nvim_open_win() failed")
-    g_handle = nil
+    log.debug("open(): nvim_open_win() failed for " .. key)
+    handles[key] = nil
     return
   end
 
-  g_handle = handle
+  handles[key] = handle
 
   for k, v in pairs(local_opts_default) do
     vim.api.nvim_set_option_value(k, v, {win = handle})
   end
+
+  for k, v in pairs(local_opts[key]) do
+    vim.api.nvim_set_option_value(k, v, {win = handle})
+  end
 end
 
+---get window handle by key
+---@param key git_key
 ---@return win_handle|nil #can be nil, but should not be zero
-function M.get_handle()
-  return g_handle
+function M.get_handle(key)
+  return handles[key]
 end
 
----close window. if window is not opened, just return
+---close window by key
+---if window is not existing, just return
 ---@return nil
-function M.close()
-  if not g_handle then
+function M.close(key)
+  if not handles[key] then
     return
   end
-  vim.api.nvim_win_close(g_handle, true)
-  g_handle = nil
+  vim.api.nvim_win_close(handles[key], true)
+  handles[key] = nil
 end
 
 return M

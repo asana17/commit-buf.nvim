@@ -47,4 +47,10 @@ function M.error(msg)
   M.print(msg, "ErrorMsg")
 end
 
+---get prefix for output message
+---@return string
+function M.get_message_prefix()
+  return "[" .. plugin_name .. "]"
+end
+
 return M

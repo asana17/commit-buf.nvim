@@ -3,8 +3,16 @@ local log = require("commit-buf.log")
 local M = {}
 
 ---@alias buf_handle integer
----@type buf_handle|nil could be nil, but should not be zero
-local g_handle
+---@type table<git_key, buf_handle|nil>
+---these handles could be nil, but should not be zero
+local handles = {}
+
+---@type table<git_key, table>
+local local_opts = {
+  git_log= {
+    filetype = "gitrebase",
+  },
+}
 
 ---@alias vim_buf_opt string
 ---@type table<vim_buf_opt, any>
@@ -17,25 +25,76 @@ local local_opts_default = {
   modifiable = false,
 }
 
----create customized buffer
+---@type table<vim_buf_opt, any>
+local local_opts_make_mutable = {
+  readonly = false,
+  modifiable = true,
+}
+
+---@type table<vim_buf_opt, any>
+local local_opts_make_immutable = {
+  readonly = true,
+  modifiable = false,
+}
+
+---@param key git_key
+---@return string
+local function generate_temp_name(key)
+  local temp_buf_name = log.get_message_prefix() .. " " .. key
+  return temp_buf_name
+end
+
+---create customized buffer by key
+---@param key git_key
 ---@return nil
-function M.create()
+function M.create(key)
   local handle = vim.api.nvim_create_buf(false, true)
   if handle == 0 then
-    log.debug("create(): nvim_create_buf() failed")
-    g_handle = nil
+    log.debug("create(): nvim_create_buf() failed for " .. key)
+    handles[key] = nil
+    return
   end
+  handles[key] = handle
 
-  g_handle = handle
+  local buf_name = generate_temp_name(key)
+  vim.api.nvim_buf_set_name(handle, buf_name)
+
 
   for k, v in pairs(local_opts_default) do
     vim.api.nvim_set_option_value(k, v, {buf = handle})
   end
+
+  for k, v in pairs(local_opts[key]) do
+    vim.api.nvim_set_option_value(k, v, {buf = handle})
+  end
 end
 
----@return buf_handle|nil #can be nil, but should not be zero
-function M.get_handle()
-  return g_handle
+---get content by key and set it to buffer
+---@param key git_key
+---@param content table
+---@return nil
+function M.set_content(key, content)
+  if not handles[key] then
+    log.debug("set_content() failed for ".. key)
+    return
+  end
+
+  for k, v in pairs(local_opts_make_mutable) do
+    vim.api.nvim_set_option_value(k, v, {buf = handles[key]})
+  end
+
+  vim.api.nvim_buf_set_lines(handles[key], 0, -1, false, content)
+
+  for k, v in pairs(local_opts_make_immutable) do
+    vim.api.nvim_set_option_value(k, v, {buf = handles[key]})
+  end
+end
+
+---get buffer handle by key
+---@param key git_key
+---@return buf_handle|nil #could be nil, but should not be zero
+function M.get_handle(key)
+  return handles[key]
 end
 
 return M
