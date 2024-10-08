@@ -8,6 +8,11 @@ local configs_default = {
 
 local initialized = false
 
+local local_opts_default = {
+  list = false,
+  foldenable = false,
+}
+
 local nums = {}
 
 ---@return nil
@@ -24,6 +29,10 @@ function M.open()
   end
   update_config()
   vim.api.nvim_open_win(0, true, configs_default)
+  local cur_win = vim.api.nvim_get_current_win()
+  for k, v in pairs(local_opts_default) do
+    vim.api.nvim_set_option_value(k, v, {win = cur_win})
+  end
 end
 
 return M

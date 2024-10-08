@@ -1,8 +1,10 @@
+local buffer = require("commit-buf.buffer")
 local window = require("commit-buf.window")
 local M = {}
 
 local function setup()
   window.open()
+  buffer.init()
 end
 
 ---@return nil
