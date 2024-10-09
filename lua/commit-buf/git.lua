@@ -3,6 +3,12 @@ local utils = require("commit-buf.utils")
 local M = {}
 
 local cmds= {
+  git_diff= {
+    "git",
+    "diff",
+    "--no-color",
+    "--cached",
+  },
   git_status = {
     "git",
     "status"
@@ -10,15 +16,18 @@ local cmds= {
 }
 
 local setlocal_opts = {
+  git_diff = buffer.setlocal_opt_fixed_readonly .. " " .. "filetype=git",
   git_status = buffer.setlocal_opt_fixed_readonly .. " " .. "filetype=gitrebase",
 }
 
 local window_cmds = {
+  git_diff = "botright vsplit",
   git_status = "belowright split",
 }
 
-local fallback_msgs = {
-  git_status = "",
+local err_msgs = {
+  git_status = "cannot achieve git status",
+  git_diff= "cannot achieve git diff",
 }
 
 ---@param key string
@@ -28,7 +37,7 @@ local function init(key)
   local setlocal_opt = setlocal_opts[key]
   local table, _= utils.get_result_table(cmd, 0, 0, 100)
   if table == nil then
-    table = { fallback_msgs[key] }
+    table = { err_msgs[key] }
   end
   vim.api.nvim_buf_set_lines(0, 0, -1, false, table)
   vim.cmd.setlocal(setlocal_opt)
@@ -46,6 +55,7 @@ end
 ---@return nil
 function M.open_windows()
   open_window("git_status")
+  open_window("git_diff")
 end
 
 return M
