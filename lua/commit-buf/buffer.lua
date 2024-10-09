@@ -9,6 +9,9 @@ local handles = {}
 
 ---@type table<git_key, table>
 local local_opts = {
+  git_diff_staged = {
+    filetype = "git",
+  },
   git_log= {
     filetype = "gitrebase",
   },

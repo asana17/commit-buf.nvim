@@ -4,11 +4,15 @@ local M = {}
 
 ---@type table<git_key, "commit_buf">
 local base_window = {
+  git_diff_staged = "commit_buf",
   git_log = "commit_buf",
 }
 
 ---@type table<git_key, table>
 local configs = {
+  git_diff_staged = {
+    split = "right",
+  },
   git_log = {
     split = "below",
   },
@@ -24,6 +28,7 @@ local initialized = false
 
 ---@type table<git_key, table>
 local local_opts = {
+  git_diff_staged = {},
   git_log = {
     number = false,
   },

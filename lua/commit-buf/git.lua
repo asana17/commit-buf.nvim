@@ -4,6 +4,12 @@ local M = {}
 
 ---@type table<git_key, table>
 local commands= {
+  git_diff_staged = {
+    "git",
+    "diff",
+    "--no-color",
+    "--cached",
+  },
   git_log = {
     "git",
     "log",
@@ -14,6 +20,7 @@ local commands= {
 
 ---@type table<git_key, string>
 local err_msgs = {
+  git_diff_staged = "cannot achieve staged git diff",
   git_log = "cannot achieve git log",
 }
 

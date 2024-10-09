@@ -5,10 +5,11 @@ local window = require("commit-buf.window")
 
 local M = {}
 
----@alias git_key "git_log"
+---@alias git_key "git_diff_staged"|"git_log"
 ---@type git_key[]
 local git_keys = {
-  [1] = "git_log",
+  [1] = "git_diff_staged",
+  [2] = "git_log",
 }
 
 ---@param key git_key
