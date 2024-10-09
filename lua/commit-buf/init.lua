@@ -5,7 +5,8 @@ local window = require("commit-buf.window")
 local M = {}
 
 local git_keys = {
-  [1] = "git_status",
+  [1] = "git_diff",
+  [2] = "git_status",
 }
 
 ---@param key string

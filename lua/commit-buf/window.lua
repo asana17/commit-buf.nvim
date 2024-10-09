@@ -1,10 +1,14 @@
 local M = {}
 
 local base_window = {
+  git_diff = "commit_buf",
   git_status = "commit_buf",
 }
 
 local configs = {
+  git_diff = {
+    split = "below",
+  },
   git_status = {
     split = "right",
   }
@@ -13,6 +17,7 @@ local configs = {
 local initialized = false
 
 local local_opts = {
+  git_diff = {},
   git_status = {
     number = false,
   }
@@ -32,6 +37,7 @@ local function update_config(key)
 end
 
 ---available keys
+---  git_diff
 ---  git_status
 ---@param key string
 ---@return nil

@@ -2,6 +2,12 @@ local utils = require("commit-buf.utils")
 local M = {}
 
 local cmds= {
+  git_diff = {
+    "git",
+    "diff",
+    "--no-color",
+    "--cached",
+  },
   git_status = {
     "git",
     "status"
@@ -9,10 +15,12 @@ local cmds= {
 }
 
 local err_msgs = {
+  git_diff= "cannot achieve git diff",
   git_status = "cannot achieve git status",
 }
 
 ---available keys
+---  git_diff
 ---  git_status
 ---@param key string
 ---@return table

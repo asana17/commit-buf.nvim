@@ -2,6 +2,9 @@ local utils = require("commit-buf.utils")
 local M = {}
 
 local local_opts = {
+  git_diff = {
+    filetype = "git",
+  },
   git_status = {
     filetype = "gitrebase",
   }
@@ -26,6 +29,7 @@ local function generate_temp_name(key)
 end
 
 ---available keys
+---  git_diff
 ---  git_status
 ---@param key string
 ---@param output_table table
