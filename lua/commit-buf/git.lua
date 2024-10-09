@@ -9,10 +9,12 @@ local cmds= {
 
 local setlocal_opts = {
   git_status = buffer.setlocal_opt_fixed_readonly .. " " .. "filetype=gitrebase",
+  git_diff = buffer.setlocal_opt_fixed_readonly .. " " .. "filetype=git",
 }
 
 local window_cmds = {
   git_status = "belowright split",
+  git_diff = "botright vsplit",
 }
 
 ---@param key string
@@ -37,6 +39,7 @@ end
 ---@return nil
 function M.open_windows()
   open_window("git_status")
+  open_window("git_diff")
 end
 
 return M
