@@ -2,11 +2,15 @@ local M = {}
 
 local base_window = {
   git_diff = "commit_buf",
+  git_diff_name_only = "git_status",
   git_status = "commit_buf",
 }
 
 local configs = {
   git_diff = {
+    split = "below",
+  },
+  git_diff_name_only = {
     split = "below",
   },
   git_status = {
@@ -18,6 +22,7 @@ local initialized = false
 
 local local_opts = {
   git_diff = {},
+  git_diff_name_only = {},
   git_status = {
     number = false,
   }
@@ -38,6 +43,7 @@ end
 
 ---available keys
 ---  git_diff
+---  git_diff_name_only
 ---  git_status
 ---@param key string
 ---@return nil
@@ -51,6 +57,7 @@ function M.open(key)
   vim.api.nvim_open_win(0, true, configs[key])
 
   local cur_win = vim.api.nvim_get_current_win()
+  nums[key] = cur_win
 
   for k, v in pairs(local_opts_default) do
     vim.api.nvim_set_option_value(k, v, {win = cur_win})
