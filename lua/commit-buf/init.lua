@@ -5,11 +5,24 @@ local window = require("commit-buf.window")
 
 local M = {}
 
----@alias git_key "git_diff_staged"|"git_log"
+---@alias git_key "git_diff_staged"|"git_log"|"git_staged_file_list"
 ---@type git_key[]
 local git_keys = {
   [1] = "git_diff_staged",
   [2] = "git_log",
+  [3] = "git_staged_file_list",
+}
+
+---@type table<git_key, table>
+local keymaps = {
+  git_staged_file_list = {
+    [1] = {
+      mode = "n",
+      lhs = "<CR>",
+      rhs = ":lua require('commit-buf').file_diff_under_cursor()<CR>",
+      opts = { silent = true },
+    },
+  },
 }
 
 ---@param key git_key
@@ -30,6 +43,7 @@ local function setup_git(key)
 
   local output_table = git.get_output_table(key)
   buffer.set_content(key, output_table)
+  buffer.set_keymaps(key, keymaps[key])
 
   vim.api.nvim_win_set_buf(win_handle, buf_handle)
 end
@@ -39,6 +53,13 @@ local function setup()
   for _, key in ipairs(git_keys) do
     setup_git(key)
   end
+end
+
+---@return nil
+function M.file_diff_under_cursor()
+  local current_line = vim.api.nvim_get_current_line()
+  local file_diff = git.diff_relative_path(current_line)
+  buffer.set_content("git_diff_staged", file_diff)
 end
 
 ---@return nil

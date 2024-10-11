@@ -2,10 +2,11 @@ local log = require("commit-buf.log")
 
 local M = {}
 
----@type table<git_key, "commit_buf">
+---@type table<git_key, git_key|"commit_buf">
 local base_window = {
   git_diff_staged = "commit_buf",
-  git_log = "commit_buf",
+  git_log= "commit_buf",
+  git_staged_file_list = "commit_buf",
 }
 
 ---@type table<git_key, table>
@@ -14,6 +15,9 @@ local configs = {
     split = "right",
   },
   git_log = {
+    split = "below",
+  },
+  git_staged_file_list = {
     split = "below",
   },
 }
@@ -32,6 +36,7 @@ local local_opts = {
   git_log = {
     number = false,
   },
+  git_staged_file_list = {},
 }
 
 ---@alias vim_win_opt string

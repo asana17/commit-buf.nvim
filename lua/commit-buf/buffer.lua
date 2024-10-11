@@ -15,6 +15,9 @@ local local_opts = {
   git_log= {
     filetype = "gitrebase",
   },
+  git_staged_file_list = {
+    filetype = "git",
+  },
 }
 
 ---@alias vim_buf_opt string
@@ -90,6 +93,23 @@ function M.set_content(key, content)
 
   for k, v in pairs(local_opts_make_immutable) do
     vim.api.nvim_set_option_value(k, v, {buf = handles[key]})
+  end
+end
+
+---set keymaps to buffer specified by key
+---@param key git_key
+---@param keymaps table<integer, any>
+function M.set_keymaps(key, keymaps)
+  if not keymaps then
+    return
+  end
+
+  if not handles[key] then
+    log.debug("set_keymaps() failed for " .. key)
+  end
+
+  for _, keymap in ipairs(keymaps) do
+    vim.api.nvim_buf_set_keymap(handles[key], keymap.mode, keymap.lhs, keymap.rhs, keymap.opts)
   end
 end
 
