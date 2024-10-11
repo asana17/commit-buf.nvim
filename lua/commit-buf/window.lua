@@ -2,16 +2,20 @@ local log = require("commit-buf.log")
 
 local M = {}
 
----@type table<git_key, "commit_buf">
+---@type table<git_key, git_key|"commit_buf">
 local base_window = {
   git_diff_staged = "commit_buf",
-  git_status = "commit_buf",
+  git_staged_file_list = "commit_buf",
+  git_status = "git_staged_file_list",
 }
 
 ---@type table<git_key, table>
 local configs = {
   git_diff_staged = {
     split = "right",
+  },
+  git_staged_file_list = {
+    split = "below",
   },
   git_status = {
     split = "below",
@@ -29,6 +33,7 @@ local initialized = false
 ---@type table<git_key, table>
 local local_opts = {
   git_diff_staged = {},
+  git_staged_file_list = {},
   git_status = {
     number = false,
   },
