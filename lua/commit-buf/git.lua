@@ -53,6 +53,12 @@ local buf_names = {
   git_diff_name_only = "[commit-buf] press Enter to show file diff under cursor"
 }
 
+local fallback_msgs = {
+  git_diff = "---no-diff---",
+  git_diff_name_only = "---no staged file---",
+  git_status = "",
+}
+
 local win_nums = {}
 
 ---@param key string
@@ -64,6 +70,9 @@ local function init(key)
   local table, _= utils.get_result_table(cmd, 0, 0, 100)
   if table == nil then
     table = { err_msgs[key] }
+  end
+  if utils.is_result_table_empty(table) then
+    table = { fallback_msgs[key] }
   end
   vim.api.nvim_buf_set_lines(0, 0, -1, false, table)
   vim.cmd.setlocal(setlocal_opt)
@@ -104,6 +113,9 @@ function M.file_diff_under_cursor()
   table.remove(cmds.git_diff)
   if stdout_table == nil then
     stdout_table = { err_msgs.git_diff }
+  end
+  if utils.is_result_table_empty(stdout_table) then
+    stdout_table = { fallback_msgs.git_diff}
   end
   vim.cmd.setlocal("noreadonly modifiable")
   vim.api.nvim_buf_set_lines(0, 0, -1, false, stdout_table)

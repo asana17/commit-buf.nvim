@@ -29,4 +29,18 @@ function M.get_result_table(cmd, exit_code, signal, timeout)
   return stdout_table, stderr_table
 end
 
+---return true if result_table is empty
+---@param result_table table
+---@return boolean
+function M.is_result_table_empty(result_table)
+  if #result_table == 0 then
+    return true
+  end
+  local _, value = next(result_table)
+  if #result_table == 1 and value == "" then
+    return true
+  end
+  return false
+end
+
 return M
