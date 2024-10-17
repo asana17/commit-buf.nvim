@@ -49,6 +49,10 @@ local keymaps = {
   },
 }
 
+local buf_names = {
+  git_diff_name_only = "[commit-buf] press Enter to show file diff under cursor"
+}
+
 local win_nums = {}
 
 ---@param key string
@@ -74,7 +78,10 @@ end
 ---@return nil
 local function open_window(key)
   local window_cmd = window_cmds[key]
-  local buf_name = buffer.generate_temp_name(key)
+  local buf_name = buf_names[key]
+  if buf_name == nil then
+    buf_name = buffer.generate_temp_name(key)
+  end
   vim.cmd(window_cmd .. " " .. buf_name)
   init(key)
 end
