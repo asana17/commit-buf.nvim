@@ -27,6 +27,12 @@ local err_msgs = {
   git_status = "cannot achieve git status",
 }
 
+local fallback_msgs = {
+  git_diff = "---no-diff---",
+  git_diff_name_only = "---no staged file---",
+  git_status = "",
+}
+
 ---available keys
 ---  git_diff
 ---  git_diff_name_only
@@ -38,6 +44,9 @@ function M.get_output_table(key)
   local result_table, _= utils.get_result_table(cmd, 0, 0, 100)
   if result_table == nil then
     result_table = { err_msgs[key] }
+  end
+  if utils.is_result_table_empty(result_table) then
+    result_table = { fallback_msgs[key] }
   end
   return result_table
 end
@@ -59,6 +68,9 @@ function M.diff_relative_path(path)
   table.remove(cmds.git_diff)
   if result_table == nil then
     result_table = { err_msgs.git_diff }
+  end
+  if utils.is_result_table_empty(result_table) then
+    result_table = { fallback_msgs.git_diff}
   end
   return result_table
 end
