@@ -32,6 +32,13 @@ local err_msgs = {
   git_staged_file_list = "cannot achieve staged file path",
 }
 
+---@type table<git_key, string>
+local fallback_msgs = {
+  git_diff= "---no staged file---",
+  git_log= "---no log---",
+  git_staged_file_list = "---no staged file---",
+}
+
 ---get output of git command specified by key
 ---@param key git_key
 ---@return table<string>
@@ -40,6 +47,9 @@ function M.get_output_table(key)
   local result_table, _= utils.run_system_cmd(cmd, 0, 0, 100)
   if result_table == nil then
     result_table = { err_msgs[key] }
+  end
+  if utils.is_result_table_empty(result_table) then
+    result_table = { fallback_msgs[key] }
   end
   return result_table
 end
@@ -62,6 +72,9 @@ function M.diff_relative_path(path)
   table.remove(cmd_table)
   if result_table == nil then
     result_table = { err_msgs["git_diff_staged"] }
+  end
+  if utils.is_result_table_empty(result_table) then
+    result_table = { fallback_msgs["git_diff"] }
   end
   return result_table
 end
