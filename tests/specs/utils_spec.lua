@@ -19,3 +19,14 @@ describe("run_system_cmd()", function()
     end
   end)
 end)
+
+describe("is_result_table_empty()", function()
+  it("empty table", function()
+    local table = {"", "", ""}
+    assert(utils.is_result_table_empty(table))
+  end)
+  it("non-empty table", function()
+    local table = {"", "hello", ""}
+    assert(not utils.is_result_table_empty(table))
+  end)
+end)

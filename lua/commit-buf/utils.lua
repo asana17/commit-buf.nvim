@@ -34,4 +34,21 @@ function M.run_system_cmd(cmd, exit_code, signal, timeout)
   return stdout_table, stderr_table
 end
 
+---return true if result_table is empty
+---@param result_table table
+---@return boolean
+function M.is_result_table_empty(result_table)
+  if result_table == nil then
+    return true
+  end
+  local empty = true
+  for i = 1, #result_table do
+    if result_table[i] ~= "" then
+      empty = false
+      goto end_of_loop end
+  end
+  ::end_of_loop::
+  return empty
+end
+
 return M
