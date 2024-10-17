@@ -2,6 +2,12 @@ local log = require("commit-buf.log")
 
 local M = {}
 
+---@type table<git_key, string>
+local buf_names = {
+  git_log = "git log of previous 5 commits",
+  git_staged_file_list = "press Enter to show file diff under cursor",
+}
+
 ---@alias buf_handle integer
 ---@type table<git_key, buf_handle|nil>
 ---these handles could be nil, but should not be zero
@@ -62,7 +68,10 @@ function M.create(key)
   end
   handles[key] = handle
 
-  local buf_name = generate_temp_name(key)
+  local buf_name = buf_names[key]
+  if not buf_name then
+    buf_name = generate_temp_name(key)
+  end
   vim.api.nvim_buf_set_name(handle, buf_name)
 
 
