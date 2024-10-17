@@ -1,6 +1,10 @@
 local utils = require("commit-buf.utils")
 local M = {}
 
+local buf_names = {
+  git_diff_name_only = "press Enter to show file diff under cursor"
+}
+
 local local_opts = {
   git_diff = {
     filetype = "git",
@@ -56,7 +60,10 @@ function M.init(key, output_table, keymap)
   local cur_buf = vim.api.nvim_get_current_buf()
   nums[key] = cur_buf
 
-  local buf_name = generate_temp_name(key)
+  local buf_name = buf_names[key]
+  if buf_name == nil then
+    buf_name = generate_temp_name(key)
+  end
   vim.api.nvim_buf_set_name(cur_buf, buf_name)
 
   vim.api.nvim_buf_set_lines(cur_buf, 0, -1, false, output_table)
