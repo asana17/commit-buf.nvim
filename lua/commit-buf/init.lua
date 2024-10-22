@@ -1,6 +1,10 @@
 local window = require("commit-buf.window")
 local M = {}
 
+local function setup()
+  window.open()
+end
+
 ---@return nil
 function M.set_autocmd()
   M.augroup = vim.api.nvim_create_augroup(
@@ -12,7 +16,7 @@ function M.set_autocmd()
     {
       group = M.augroup,
       pattern = '*.comtxt',
-      callback = window.open,
+      callback = setup,
     })
 end
 
