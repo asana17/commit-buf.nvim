@@ -4,7 +4,9 @@ local M = {}
 
 ---@type table<git_key, string>
 local buf_names = {
-  git_staged_file_list = "press Enter to show file diff under cursor"
+  git_diff_staged = "staged change",
+  git_show_head = "HEAD",
+  git_staged_file_list = "press Enter to show file diff under cursor",
 }
 
 ---@alias buf_handle integer
@@ -15,6 +17,9 @@ local handles = {}
 ---@type table<git_key, table>
 local local_opts = {
   git_diff_staged = {
+    filetype = "git",
+  },
+  git_show_head = {
     filetype = "git",
   },
   git_staged_file_list = {
