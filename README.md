@@ -27,6 +27,88 @@ This plugin is inspired by [rhysd/commitia.vim](https://github.com/rhysd/committ
   require("commit-buf.nvim").setup()
   ```
 
+## Configuration
+
+### default
+
+  ```lua
+  local config = {
+    window = {
+      columns = {
+        [1] = {
+          "commit_buf",
+          "git_staged_file_list",
+          "git_log",
+        },
+        [2] = {
+          "git_show_head",
+          "git_diff_staged",
+        },
+      },
+    },
+    verbose = false,
+  }
+
+  require("commit-buf.nvim").setup(config)
+  ```
+
+### Change window layout
+
+Windows are allocated using the column list `windows.columns`. For example,
+the default lists represents the following layout:
+
+```text
+|------------------------|------------------------|
+|                        |                        |
+|     "commit_buf"       |                        |
+|                        |    "git_show_head"     |
+|------------------------|                        |
+|                        |                        |
+| "git_staged_file_list" |------------------------|
+|                        |                        |
+|------------------------|                        |
+|                        |    "git_diff_staged"   |
+|      "git_log"         |                        |
+|                        |                        |
+|------------------------|------------------------|
+```
+
+`git_show_head` and `git_diff_staged` will be aligned and maximized
+automatically.
+
+If you pass the following `windows.columns` configuration, then the window
+layout will be like the below image.
+
+```lua
+window = {
+  columns = {
+    [1] = {
+      "commit_buf",
+      "git_show_head",
+    },
+    [2] = {
+      "git_log",
+      "git_staged_file_list",
+      "git_diff_staged",
+    },
+  },
+}
+```
+
+```text
+|------------------------|------------------------|
+|                        |      "git_log"         |
+|      "commit_buf"      |------------------------|
+|                        | "git_staged_file_list" |
+|------------------------|------------------------|
+|                        |                        |
+|                        |                        |
+|    "git_show_head"     |    "git_diff_staged"   |
+|                        |                        |
+|                        |                        |
+|------------------------|------------------------|
+```
+
 ## Test
 
 Use [`tests/minimal_init.lua`](tests/minimal_init.lua) to check.

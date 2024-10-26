@@ -8,9 +8,9 @@ local M = {}
 ---@alias git_key "git_diff_staged"|"git_log"|"git_show_head"|"git_staged_file_list"
 ---@type git_key[]
 local git_keys = {
-  [1] = "git_show_head",
-  [2] = "git_diff_staged",
-  [3] = "git_log",
+  [1] = "git_diff_staged",
+  [2] = "git_log",
+  [3] = "git_show_head",
   [4] = "git_staged_file_list",
 }
 
@@ -28,8 +28,7 @@ local keymaps = {
 
 ---@param key git_key
 ---@return nil
-local function setup_git(key)
-  window.open(key)
+local function git_set_buf_to_win(key)
   local win_handle = window.get_handle(key)
   if not win_handle then
     return
@@ -51,9 +50,11 @@ end
 
 ---@return nil
 local function setup()
+  window.open()
   for _, key in ipairs(git_keys) do
-    setup_git(key)
+    git_set_buf_to_win(key)
   end
+  window.close_if_dependent_win_not_opened()
 end
 
 ---@return nil
