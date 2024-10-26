@@ -5,12 +5,13 @@ local window = require("commit-buf.window")
 
 local M = {}
 
----@alias git_key "git_diff_staged"|"git_log"|"git_staged_file_list"
+---@alias git_key "git_diff_staged"|"git_log"|"git_show_head"|"git_staged_file_list"
 ---@type git_key[]
 local git_keys = {
-  [1] = "git_diff_staged",
-  [2] = "git_log",
-  [3] = "git_staged_file_list",
+  [1] = "git_show_head",
+  [2] = "git_diff_staged",
+  [3] = "git_log",
+  [4] = "git_staged_file_list",
 }
 
 ---@type table<git_key, table>
@@ -60,6 +61,12 @@ function M.file_diff_under_cursor()
   local current_line = vim.api.nvim_get_current_line()
   local file_diff = git.diff_relative_path(current_line)
   buffer.set_content("git_diff_staged", file_diff)
+  local file_head = git.show_head_relative_path(current_line)
+  buffer.set_content("git_show_head", file_head)
+  local file_staged = git.show_staged_relative_path(current_line)
+  buffer.set_content("git_diff_staged", file_staged)
+  window.run_vim_cmd("git_show_head", "diffthis")
+  window.run_vim_cmd("git_diff_staged", "diffthis")
 end
 
 ---@return nil

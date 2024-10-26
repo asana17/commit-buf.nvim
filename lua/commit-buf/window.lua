@@ -4,14 +4,18 @@ local M = {}
 
 ---@type table<git_key, git_key|"commit_buf">
 local base_window = {
-  git_diff_staged = "commit_buf",
+  git_diff_staged = "git_show_head",
   git_log= "commit_buf",
+  git_show_head = "commit_buf",
   git_staged_file_list = "commit_buf",
 }
 
 ---@type table<git_key, table>
 local configs = {
   git_diff_staged = {
+    split = "below",
+  },
+  git_show_head = {
     split = "right",
   },
   git_log = {
@@ -36,6 +40,7 @@ local local_opts = {
   git_log = {
     number = false,
   },
+  git_show_head = {},
   git_staged_file_list = {},
 }
 
@@ -50,6 +55,22 @@ local local_opts_default = {
 ---@return nil
 local function update_config(key)
   configs[key]["win"] = handles[base_window[key]]
+end
+
+---run vim cmd on window specified by key
+---@param key git_key
+---@param cmd_str string
+---@return nil
+function M.run_vim_cmd(key, cmd_str)
+  if not handles[key] then
+    log.debug("run_vim_cmd(): window is not opened for " .. key)
+    return
+  end
+
+  local cur_win = vim.api.nvim_get_current_win()
+  vim.api.nvim_set_current_win(handles[key])
+  vim.cmd(cmd_str)
+  vim.api.nvim_set_current_win(cur_win)
 end
 
 ---open customized window by key

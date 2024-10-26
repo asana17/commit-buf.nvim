@@ -16,6 +16,10 @@ local commands= {
     "--decorate",
     "-5",
   },
+  git_show_head = {
+    "git",
+    "show",
+  },
   git_staged_file_list = {
     "git",
     "diff",
@@ -29,13 +33,15 @@ local commands= {
 local err_msgs = {
   git_diff_staged = "cannot achieve staged git diff",
   git_log = "cannot achieve git log",
+  git_show_head = "cannot achieve git HEAD",
   git_staged_file_list = "cannot achieve staged file path",
 }
 
 ---@type table<git_key, string>
 local fallback_msgs = {
-  git_diff= "---no staged file---",
+  git_diff_staged = "---no staged file---",
   git_log= "---no log---",
+  git_show_head = "---no staged file---",
   git_staged_file_list = "---no staged file---",
 }
 
@@ -74,7 +80,39 @@ function M.diff_relative_path(path)
     result_table = { err_msgs["git_diff_staged"] }
   end
   if utils.is_result_table_empty(result_table) then
-    result_table = { fallback_msgs["git_diff"] }
+    result_table = { fallback_msgs["git_diff_staged"] }
+  end
+  return result_table
+end
+
+---@param path string
+---@return table
+function M.show_staged_relative_path(path)
+  local cmd_table = commands["git_show_head"]
+  table.insert(cmd_table, ":" .. path)
+  local result_table, _ = utils.run_system_cmd(cmd_table, 0, 0, 100)
+  table.remove(cmd_table)
+  if result_table == nil then
+    result_table = { err_msgs["git_diff_staged"]}
+  end
+  if utils.is_result_table_empty(result_table) then
+    result_table = { fallback_msgs["git_diff_staged"] }
+  end
+  return result_table
+end
+
+---@param path string
+---@return table
+function M.show_head_relative_path(path)
+  local cmd_table = commands["git_show_head"]
+  table.insert(cmd_table, "HEAD:" .. path)
+  local result_table, _ = utils.run_system_cmd(cmd_table, 0, 0, 100)
+  table.remove(cmd_table)
+  if result_table == nil then
+    result_table = { err_msgs["git_show_head"]}
+  end
+  if utils.is_result_table_empty(result_table) then
+    result_table = { fallback_msgs["git_diff_staged"] }
   end
   return result_table
 end

@@ -5,6 +5,8 @@ local M = {}
 ---@type table<git_key, string>
 local buf_names = {
   git_log = "git log of previous 5 commits",
+  git_diff_staged = "staged change",
+  git_show_head = "HEAD",
   git_staged_file_list = "press Enter to show file diff under cursor",
 }
 
@@ -20,6 +22,9 @@ local local_opts = {
   },
   git_log= {
     filetype = "gitrebase",
+  },
+  git_show_head = {
+    filetype = "git",
   },
   git_staged_file_list = {
     filetype = "git",
