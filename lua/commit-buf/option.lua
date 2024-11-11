@@ -16,6 +16,8 @@ local defaults = {
         "git_diff_staged",
       },
     },
+    min_height = 16,
+    min_width = 85,
   },
   verbose = false,
 }

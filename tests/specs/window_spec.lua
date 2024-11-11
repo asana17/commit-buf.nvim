@@ -6,6 +6,8 @@ local window = require("commit-buf.window")
 local configs = {
   window = {
     columns = {},
+    min_height = 1,
+    min_width = 1,
   },
   verbose = true,
 }
@@ -87,6 +89,10 @@ describe("verify_config()", function()
 end)
 
 describe("alloc_below()", function()
+  configs.window.min_height = 15
+  configs.window.min_width = 1
+
+  option.setup(configs)
   window.__mock_screen_size(100, 1)
   local columns = {
     [1] = {
@@ -119,6 +125,10 @@ describe("alloc_below()", function()
 end)
 
 describe("alloc_right()", function()
+  configs.window.min_height = 1
+  configs.window.min_width = 80
+
+  option.setup(configs)
   window.__mock_screen_size(1, 500)
 
   it("should fail if base window is not opened", function()
