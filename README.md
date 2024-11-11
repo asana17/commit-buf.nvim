@@ -45,6 +45,8 @@ This plugin is inspired by [rhysd/commitia.vim](https://github.com/rhysd/committ
           "git_diff_staged",
         },
       },
+      min_height = 14,
+      min_width = 80,
     },
     verbose = false,
   }
@@ -74,7 +76,8 @@ the default lists represents the following layout:
 ```
 
 `git_show_head` and `git_diff_staged` will be aligned and maximized
-automatically.
+automatically. The minimum size of other windows can be configured using
+`window.min_height` and `window.min_width`.
 
 If you pass the following `windows.columns` configuration, then the window
 layout will be like the below image.

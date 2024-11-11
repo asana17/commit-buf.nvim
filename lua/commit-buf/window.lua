@@ -38,12 +38,6 @@ local local_opts_default = {
   foldenable = false,
 }
 
----@type integer
-local min_height = 14
-
----@type integer
-local min_width = 80
-
 ---@type table<"height"|"width", integer>
 local screen_size = {}
 
@@ -97,6 +91,7 @@ local function alloc_below(key, base_key)
 
   local row_count = #columns_opened[column_index]
 
+  local min_height = option.options.window.min_height
   -- check if screen has enough height for new window
   if screen_size["height"] / (row_count + 1) < min_height then
     log.debug("alloc_below(): height not enough when allocating " .. key)
@@ -119,6 +114,7 @@ local function alloc_right(key, base_key)
 
   local column_count = #columns_opened
 
+  local min_width = option.options.window.min_width
   -- check if screen has enough width for new column
   if screen_size["width"] / (column_count + 1) < min_width then
     log.debug("alloc_right(): width not enough when allocating " .. key)
@@ -278,6 +274,9 @@ end
 ---@param key git_key
 ---@return nil
 local function maximize_key(key)
+  local min_height = option.options.window.min_height
+  local min_width = option.options.window.min_width
+
   local column_index = get_column_index(key)
   for i, _ in pairs(columns_opened) do
     if i ~= column_index then
@@ -302,6 +301,8 @@ local function align_max_height(column_key_large, column_key_small)
     log.debug("align_max_height(): get_column_index() failed for " .. column_key_small)
     return
   end
+
+  local min_height = option.options.window.min_height
 
   -- large row has more windows and requires more space for other windows
   -- calc max height based on large row
@@ -342,6 +343,8 @@ local function maximize_git_diff_and_show()
   end
 
   local row_count_diff = #columns_opened[diff_column]
+  local min_height = option.options.window.min_width
+  local min_width = option.options.window.min_width
   local max_height
 
   if diff_column == show_column then
