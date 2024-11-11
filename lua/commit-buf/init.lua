@@ -1,4 +1,5 @@
 local buffer = require("commit-buf.buffer")
+local option = require("commit-buf.option")
 local window = require("commit-buf.window")
 
 local M = {}
@@ -38,8 +39,10 @@ local function set_autocmd()
   )
 end
 
+---@param config CommitBufOptions | nil
 ---@return nil
-function M.setup()
+function M.setup(config)
+  option.setup(config)
   set_autocmd()
 end
 

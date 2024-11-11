@@ -1,3 +1,5 @@
+local log = require("commit-buf.log")
+
 local M = {}
 
 ---@type table<string, any>
@@ -39,7 +41,9 @@ function M.open()
 
   local handle = vim.api.nvim_open_win(0, true, configs_default)
   if handle == 0 then
+    log.debug("open(): nvim_open_win() failed")
     g_handle = nil
+    return
   end
 
   g_handle = handle

@@ -1,3 +1,5 @@
+local log = require("commit-buf.log")
+
 local M = {}
 
 ---@alias buf_handle integer
@@ -20,6 +22,7 @@ local local_opts_default = {
 function M.create()
   local handle = vim.api.nvim_create_buf(false, true)
   if handle == 0 then
+    log.debug("create(): nvim_create_buf() failed")
     g_handle = nil
   end
 
