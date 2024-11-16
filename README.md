@@ -1,8 +1,24 @@
 # commit-buf.nvim
 
+Test
+
 Attach supporting window when editing commit message within `git commit`.
 
 This plugin is inspired by [rhysd/commitia.vim](https://github.com/rhysd/committia.vim).
+
+## View
+
+### Default
+
+![view with default config](./images/commit-buf.png)
+
+### Configurable window layout
+
+![view with another config](./images/commit-buf-configured.png)
+
+### Auto configuration when window size is not enough
+
+![view with fallback config](./images/commit-buf-small.png)
 
 ## Installation
 
