@@ -165,6 +165,10 @@ function M.close_help()
   end
 end
 
+local function clean()
+  vim.cmd("qall")
+end
+
 ---@return nil
 local function set_autocmd()
   M.augroup = vim.api.nvim_create_augroup(
@@ -178,6 +182,15 @@ local function set_autocmd()
       group = M.augroup,
       pattern = '*.comtxt',
       callback = setup,
+    }
+  )
+
+  vim.api.nvim_create_autocmd(
+    {"WinClosed"},
+    {
+      group = M.augroup,
+      pattern = tostring(vim.api.nvim_get_current_win()),
+      callback = clean,
     }
   )
 end
