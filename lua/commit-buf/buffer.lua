@@ -11,11 +11,11 @@ local buf_names = {
 }
 
 ---@alias buf_handle integer
----@type table<git_key, buf_handle|nil>
+---@type table<git_key|float_key, buf_handle|nil>
 ---these handles could be nil, but should not be zero
 local handles = {}
 
----@type table<git_key, table>
+---@type table<git_key|float_key, table>
 local local_opts = {
   git_diff_staged = {
     filetype = "git",
@@ -29,6 +29,9 @@ local local_opts = {
   git_staged_file_list = {
     filetype = "git",
   },
+  help = {
+    filetype = "text",
+  }
 }
 
 ---@alias vim_buf_opt string
@@ -54,7 +57,7 @@ local local_opts_make_immutable = {
   modifiable = false,
 }
 
----@param key git_key
+---@param key git_key|float_key
 ---@return string
 local function generate_temp_name(key)
   local temp_buf_name = log.get_message_prefix() .. " " .. key
@@ -62,7 +65,7 @@ local function generate_temp_name(key)
 end
 
 ---create customized buffer by key
----@param key git_key
+---@param key git_key|float_key
 ---@return nil
 function M.create(key)
   local handle = vim.api.nvim_create_buf(false, true)
@@ -90,7 +93,7 @@ function M.create(key)
 end
 
 ---get content by key and set it to buffer
----@param key git_key
+---@param key git_key|float_key
 ---@param content table
 ---@return nil
 function M.set_content(key, content)
@@ -128,7 +131,7 @@ function M.set_keymaps(key, keymaps)
 end
 
 ---get buffer handle by key
----@param key git_key
+---@param key git_key|float_key
 ---@return buf_handle|nil #could be nil, but should not be zero
 function M.get_handle(key)
   return handles[key]

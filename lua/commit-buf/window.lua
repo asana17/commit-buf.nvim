@@ -13,8 +13,25 @@ local M = {}
 ---@type table<integer, (git_key|"commit_buf")[]>
 local columns_opened = {}
 
+---@type table<float_key, table<string, any>>
+local float_configs = {
+  help = {
+    height = 3,
+    width = 80,
+    title = "commit-buf help",
+  }
+}
+
+---@type table<string, any>
+local float_config_default = {
+  relative = "editor",
+  focusable = true,
+  style = "minimal",
+  border = "rounded",
+}
+
 ---@alias win_handle integer
----@type table<git_key|"commit_buf", win_handle|nil>
+---@type table<git_key|float_key|"commit_buf", win_handle|nil>
 ---these handles could be nil, but should not be zero
 local handles = {}
 
@@ -227,8 +244,12 @@ end
 
 ---close window by key
 ---if window is not existing, just return
+---@param key git_key|float_key|"commit_buf"
 ---@return nil
 function M.close(key)
+  if key == "commit_buf" then
+    return
+  end
   if not handles[key] then
     return
   end
@@ -478,8 +499,39 @@ function M.open()
   maximize_git_diff_and_show()
 end
 
+---@param key float_key
+---@return nil
+function M.open_float(key)
+  local config = vim.deepcopy(float_config_default, false)
+  for k, value in pairs(float_configs[key]) do
+    config[k] = value
+  end
+
+  local screen_center_upper_row = math.floor(
+    math.max(
+      screen_size["height"] - float_configs[key].height, 0
+    ) / 2
+  )
+  local screen_center_left_column = math.floor(
+    math.max(
+      screen_size["width"] - float_configs[key].width, 0
+    ) / 2
+  )
+
+  config["row"] = screen_center_upper_row
+  config["col"] = screen_center_left_column
+
+  local handle = vim.api.nvim_open_win(0, false, config)
+  if handle == 0 then
+    log.debug("open_float(): nvim_open_win() failed for " .. key)
+    return
+  end
+
+  handles[key] = handle
+end
+
 ---get window handle by key
----@param key git_key
+---@param key git_key|float_key
 ---@return win_handle|nil #can be nil, but should not be zero
 function M.get_handle(key)
   return handles[key]
