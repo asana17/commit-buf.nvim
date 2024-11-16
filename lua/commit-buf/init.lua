@@ -179,7 +179,7 @@ local function set_autocmd()
     {"BufRead", "BufNewFile"},
     {
       group = M.augroup,
-      pattern = '*.comtxt',
+      pattern = 'COMMIT_EDITMSG',
       callback = setup,
     }
   )
