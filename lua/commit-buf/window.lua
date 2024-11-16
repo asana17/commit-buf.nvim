@@ -200,6 +200,70 @@ local function verify_config()
   return true
 end
 
+---@return boolean, boolean
+local function check_screen_size_enough()
+  local height_enough = true
+  local width_enough = true
+  local max_row_count = 0
+  for _, column in ipairs(option.options.window.columns) do
+    max_row_count = math.max(#column, max_row_count)
+  end
+
+  if max_row_count * option.options.window.min_height > screen_size["height"] then
+    height_enough = false
+  end
+
+  local column_count = #option.options.window.columns
+  if column_count * option.options.window.min_width > screen_size["width"] then
+    width_enough = false
+  end
+
+  return height_enough, width_enough
+end
+
+---@param height_enough boolean
+---@param width_enough boolean
+---@return nil
+local function set_fall_back_config(height_enough, width_enough)
+  if height_enough and width_enough then
+    return
+  end
+
+  if not height_enough and not width_enough then
+    option.options.window.columns = {
+      [1] = {
+        "commit_buf",
+      },
+    }
+    return
+  end
+
+  if not height_enough then
+    option.options.window.columns = {
+      [1] = {
+        "commit_buf",
+      },
+      [2] = {
+        "git_log",
+      },
+      [3] = {
+        "git_diff_staged",
+      },
+    }
+    return
+  end
+
+  if not width_enough then
+    option.options.window.columns = {
+      [1] = {
+        "commit_buf",
+        "git_log",
+        "git_diff_staged",
+      },
+    }
+  end
+end
+
 ---@param key git_key
 ---@param base_key git_key|"commit_buf"
 ---@return nil
@@ -429,6 +493,12 @@ function M.open()
   if not is_config_valid then
     log.debug("open() failed: invalid user config")
     return
+  end
+
+  local height_enough, width_enough = check_screen_size_enough()
+  if not height_enough or not width_enough then
+    log.debug("open(): screen size not enough. use fallback config")
+    set_fall_back_config(height_enough, width_enough)
   end
 
   local base_key = "commit_buf"
