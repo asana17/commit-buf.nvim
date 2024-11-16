@@ -15,8 +15,16 @@ local git_keys = {
   [4] = "git_staged_file_list",
 }
 
----@type table<git_key|float_key, table<integer, table<string, any>>>
+---@type table<git_key|float_key|"commit_buf", table<integer, table<string, any>>>
 local global_keymaps = {
+  commit_buf = {
+    [1] = {
+      mode = "n",
+      lhs = "<ESC><ESC>",
+      rhs = ":lua require('commit-buf').move_to_win('commit_buf')<CR>",
+      opts = { silent = true },
+    },
+  },
   help = {
     [1] = {
       mode = "n",
@@ -41,7 +49,8 @@ local global_keymaps_float = {
 
 ---@type table<string>
 local help_content = {
-  " ?  :   show/close this help",
+  " ?           :   show/close this help",
+  " <ESC><ESC>  :   move to commit buf window",
 }
 
 ---@type table<git_key|float_key, table<integer, table<string, any>>>
@@ -108,6 +117,15 @@ function M.file_diff_under_cursor()
   buffer.set_content("git_diff_staged", file_staged)
   window.run_vim_cmd("git_show_head", "diffthis")
   window.run_vim_cmd("git_diff_staged", "diffthis")
+end
+
+---@return nil
+function M.move_to_win(key)
+  local win_handle = window.get_handle(key)
+  if not win_handle then
+    return
+  end
+  vim.api.nvim_set_current_win(win_handle)
 end
 
 ---@return nil
